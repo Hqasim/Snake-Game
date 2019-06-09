@@ -71,8 +71,6 @@ def game_reset():
     time.sleep(1)
     head.goto(0,0)
     head.direction = "stop"
-    score = 0
-    delay = 0.1 # Reset the delay
     pen.clear()
     pen.write("Score: {} High Score: {}".format(score, high_score), align="center", font=("Courier", 24, "normal"))
     for segment in segments:
@@ -93,6 +91,8 @@ while True:
 
     # Check for collision with the border
     if head.xcor()>290 or head.xcor()<-290 or head.ycor()>290 or head.ycor()<-290:
+        score = 0
+        delay = 0.1 # Reset the delay
         game_reset()
 
     #Check for collision with food
@@ -135,6 +135,8 @@ while True:
     #Check for head collision with the body segments
     for segment in segments:
         if segment.distance(head) < 20:
+            score = 0
+            delay = 0.1 # Reset the delay
             game_reset()
 
     time.sleep(delay)
