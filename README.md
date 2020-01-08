@@ -3,6 +3,9 @@
 Snake game is a GUI desktop application where user controls the snake with keyboard arrow keys and aims to catch as many food as 
 possible, without colliding into the boundary or itself. Game is developed using Python programming language with Tkinter library.
 
+![Break-Out](https://raw.githubusercontent.com/Hqasim/Snake-Game/master/Assets/Game_Image.png?raw=true "Game Screen Shot")
+
+
 ## Requirements:
 1. Install Python for your Operating System
 2. Download and install PyCharm by JetBrains (Download Link: https://www.jetbrains.com/pycharm/download/#section=windows).
