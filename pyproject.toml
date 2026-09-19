@@ -1,0 +1,30 @@
+[project]
+name = "snake-game"
+version = "3.0.0"
+description = "A modern, dependency-light Snake game built with Python and Tkinter."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+authors = [{ name = "Hamzah Qasim" }]
+dependencies = ["Pillow"]
+
+[project.urls]
+Repository = "https://github.com/Hqasim/Snake-Game"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["snake_game"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP"]
