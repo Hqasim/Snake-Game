@@ -14,6 +14,7 @@ from .logic import (
     has_self_collision,
     has_wall_collision,
     is_opposite_direction,
+    next_head_position,
     random_food_position,
 )
 
@@ -183,22 +184,29 @@ class Snake(tk.Canvas):
         if self.game_status != "playing":
             return
 
-        head = self.snake_positions[0]
-        if has_wall_collision(head, config.WALL_X, config.WALL_Y) or has_self_collision(
-            head, self.snake_positions[1:]
-        ):
+        # Look ahead before drawing anything: if the next step would hit a
+        # wall or the snake's own body, end the game now so the head never
+        # visibly overshoots the boundary before the collision is caught.
+        next_head = next_head_position(self.snake_positions[0], self.direction, config.MOVE_STEP)
+        will_grow = next_head == self.food_position
+        body_after_move = self.snake_positions if will_grow else self.snake_positions[:-1]
+
+        if has_wall_collision(
+            next_head, config.WALL_X, config.WALL_Y
+        ) or has_self_collision(next_head, body_after_move):
             self.end_game()
             return
 
-        self.check_food_collision()
+        if will_grow:
+            self.grow_snake()
         self.move_snake()
         self.schedule_next_frame()
 
     def move_snake(self):
         # Always drop the tail and prepend a new head; growth is handled
-        # separately in check_food_collision by pre-extending the list (and
-        # its matching canvas item) before this runs, so the two counts
-        # never drift apart.
+        # separately in grow_snake by pre-extending the list (and its
+        # matching canvas item) before this runs, so the two counts never
+        # drift apart.
         self.snake_positions = advance_snake(
             self.snake_positions, self.direction, config.MOVE_STEP, grow=False
         )
@@ -208,10 +216,7 @@ class Snake(tk.Canvas):
         self.itemconfigure(segment_ids[0], image=self._sprite_for_segment(0))
         self.itemconfigure(segment_ids[-1], image=self._sprite_for_segment(len(segment_ids) - 1))
 
-    def check_food_collision(self):
-        if self.snake_positions[0] != self.food_position:
-            return
-
+    def grow_snake(self):
         self.score += 1
         self.moves_per_second = compute_speed(
             self.score, config.BASE_MOVES_PER_SECOND, config.SPEED_STEP_EVERY_N_POINTS
